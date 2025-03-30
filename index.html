@@ -2,41 +2,76 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Effetto Macchina da Scrivere</title>
+  <title>Grafico Interattivo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    .typewriter h1 {
-      overflow: hidden;
-      border-right: .15em solid orange;
-      white-space: nowrap;
-      margin: 0 auto;
-      letter-spacing: .15em;
-      animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: orange }
-    }
-
     body {
-      background: #000;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: monospace;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+      text-align: center;
+    }
+    #grafico-container {
+      width: 600px;
+      margin: 0 auto;
+    }
+    input {
+      padding: 8px;
+      width: 300px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="typewriter">
-    <h1>Ciao, sono Stefano!</h1>
+
+  <h1>Grafico Dinamico con Chart.js</h1>
+
+  <div id="grafico-container">
+    <canvas id="mioGrafico" width="400" height="400"></canvas>
   </div>
+
+  <p>Inserisci valori separati da virgola (es: 10,20,30,40)</p>
+  <input type="text" id="datiInput" placeholder="10,20,30,40">
+  <button onclick="aggiornaGrafico()">Aggiorna Grafico</button>
+
+  <script>
+    // Inizializzazione grafico
+    var ctx = document.getElementById('mioGrafico').getContext('2d');
+    var mioGrafico = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Valore 1', 'Valore 2', 'Valore 3', 'Valore 4'],
+        datasets: [{
+          label: 'Dati personalizzati',
+          data: [10, 20, 30, 40],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Funzione per aggiornare il grafico
+    function aggiornaGrafico() {
+      var input = document.getElementById('datiInput').value;
+      var nuoviDati = input.split(',').map(Number);
+      mioGrafico.data.datasets[0].data = nuoviDati;
+      mioGrafico.data.labels = nuoviDati.map((_, i) => 'Valore ' + (i + 1));
+      mioGrafico.update();
+    }
+  </script>
+
 </body>
 </html>
